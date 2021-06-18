@@ -11,7 +11,7 @@ namespace DotForth
       Console.Write("$ ");
       while ((line = Console.ReadLine()) != null)
       {
-        forth.Run(line);
+        forth.Run(line, Console.Out);
         Console.Write("$ ");
       }
     }

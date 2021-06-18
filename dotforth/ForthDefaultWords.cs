@@ -1,8 +1,10 @@
+using System.IO;
+
 namespace DotForth
 {
   public static class ForthDefaultWords
   {
-    public static void Sum(Forth forth)
+    public static void Sum(Forth forth, TextWriter output)
     {
       var op1 = forth.Stack.Pop();
       var op2 = forth.Stack.Pop();
@@ -11,7 +13,7 @@ namespace DotForth
       var r = op1l + op2l;
       forth.Stack.Push(new StackEntry(r.ToString()));
     }
-    public static void Subtract(Forth forth)
+    public static void Subtract(Forth forth, TextWriter output)
     {
       var op1 = forth.Stack.Pop();
       var op2 = forth.Stack.Pop();
@@ -20,7 +22,7 @@ namespace DotForth
       var r = op1l - op2l;
       forth.Stack.Push(new StackEntry(r.ToString()));
     }
-    public static void Multiply(Forth forth)
+    public static void Multiply(Forth forth, TextWriter output)
     {
       var op1 = forth.Stack.Pop();
       var op2 = forth.Stack.Pop();
@@ -29,7 +31,7 @@ namespace DotForth
       var r = op1l * op2l;
       forth.Stack.Push(new StackEntry(r.ToString()));
     }
-    public static void Divide(Forth forth)
+    public static void Divide(Forth forth, TextWriter output)
     {
       var op1 = forth.Stack.Pop();
       var op2 = forth.Stack.Pop();
@@ -38,10 +40,10 @@ namespace DotForth
       var r = op1l / op2l;
       forth.Stack.Push(new StackEntry(r.ToString()));
     }
-    public static void Print(Forth forth)
+    public static void Print(Forth forth, TextWriter output)
     {
       var op = forth.Stack.Pop();
-      forth.OutputConsole.WriteLine($"> {op.Token}");
+      output.Write($"> {op.Token}");
     }
   }
 }

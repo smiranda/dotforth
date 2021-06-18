@@ -7,25 +7,19 @@ namespace DotForth
 
   public class Forth
   {
-    public Forth() : this(Console.Out)
+    public Forth()
     {
-
-    }
-    public Forth(TextWriter outputConsole)
-    {
-      OutputConsole = outputConsole;
       Stack = new Stack<StackEntry>();
       Words = new Dictionary<string, CompiledWord>();
       ScratchPad = new ScratchPad();
       LoadDefaultWords();
     }
-    internal TextWriter OutputConsole { get; private set; }
     public Stack<StackEntry> Stack { get; private set; }
     public Dictionary<string, CompiledWord> Words { get; private set; }
     public ScratchPad ScratchPad { get; private set; }
-    public void Run(string script)
+    public void Run(string script, TextWriter output)
     {
-      Run(script, this);
+      Run(script, this, output);
     }
 
     public void Push(string value)
@@ -55,7 +49,7 @@ namespace DotForth
       Words.Add("net", new CompiledWord(DotNetInterpreter.Run));
     }
 
-    internal static void Run(string script, Forth forth)
+    internal static void Run(string script, Forth forth, TextWriter output)
     {
       var definition = "";
       var definitionName = "";
@@ -108,7 +102,7 @@ namespace DotForth
           if (c == ';')
           {
             // End a definition
-            forth.OutputConsole.WriteLineAsync($"> {definitionName} word defined");
+            output.Write($"{definitionName} word defined");
             forth.Words[definitionName] = new CompiledWord(definition);
             definition = "";
             definitionName = "";
@@ -137,7 +131,7 @@ namespace DotForth
           CompiledWord word;
           if (forth.Words.TryGetValue(token, out word))
           {
-            word.Execute(forth);
+            word.Execute(forth, output);
           }
           else
           {

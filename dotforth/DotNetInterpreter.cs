@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
@@ -8,7 +9,7 @@ namespace DotForth
 {
   public static class DotNetInterpreter
   {
-    public static void Run(Forth forth)
+    public static void Run(Forth forth, TextWriter output)
     {
       var script = forth.Stack.Pop().Token;
       var scriptOptions = ScriptOptions.Default;
