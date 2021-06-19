@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace DotForth
 {
 
   public class Forth
   {
+    public Forth(List<(string, CompiledWord)> words) : base()
+    {
+      words.ForEach(w => LoadWord(w.Item1, w.Item2));
+    }
     public Forth()
     {
       Stack = new Stack<StackEntry>();
@@ -17,9 +22,9 @@ namespace DotForth
     public Stack<StackEntry> Stack { get; private set; }
     public Dictionary<string, CompiledWord> Words { get; private set; }
     public ScratchPad ScratchPad { get; private set; }
-    public void Run(string script, TextWriter output)
+    public async Task Run(string script, TextWriter output)
     {
-      Run(script, this, output);
+      await Run(script, this, output);
     }
 
     public void Push(string value)
@@ -36,7 +41,7 @@ namespace DotForth
     }
     public void LoadWord(string word, CompiledWord compiledWord)
     {
-      Words.Add(word, new CompiledWord(ForthDefaultWords.Divide));
+      Words.Add(word, compiledWord);
     }
     private void LoadDefaultWords()
     {
@@ -49,7 +54,7 @@ namespace DotForth
       Words.Add("net", new CompiledWord(DotNetInterpreter.Run));
     }
 
-    internal static void Run(string script, Forth forth, TextWriter output)
+    internal static async Task Run(string script, Forth forth, TextWriter output)
     {
       var definition = "";
       var definitionName = "";
@@ -131,7 +136,7 @@ namespace DotForth
           CompiledWord word;
           if (forth.Words.TryGetValue(token, out word))
           {
-            word.Execute(forth, output);
+            await word.Execute(forth, output);
           }
           else
           {

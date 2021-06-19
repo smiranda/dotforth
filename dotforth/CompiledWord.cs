@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace DotForth
 {
@@ -9,24 +10,24 @@ namespace DotForth
     {
       Script = script;
     }
-    public CompiledWord(Action<Forth, TextWriter> function)
+    public CompiledWord(Func<Forth, TextWriter, Task> function)
     {
       Function = function;
     }
-    public void Execute(Forth forth, TextWriter output)
+    public async Task Execute(Forth forth, TextWriter output)
     {
       if (Function != null)
       {
         // Default function
-        Function(forth, output);
+        await Function(forth, output);
       }
       else
       {
         // Custom script
-        Forth.Run(Script, forth, output);
+        await Forth.Run(Script, forth, output);
       }
     }
     public string Script { get; set; }
-    public Action<Forth, TextWriter> Function { get; set; }
+    public Func<Forth, TextWriter, Task> Function { get; set; }
   }
 }

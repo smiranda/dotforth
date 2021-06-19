@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.Scripting.Hosting;
@@ -9,7 +10,7 @@ namespace DotForth
 {
   public static class DotNetInterpreter
   {
-    public static void Run(Forth forth, TextWriter output)
+    public static async Task Run(Forth forth, TextWriter output)
     {
       var script = forth.Stack.Pop().Token;
       var scriptOptions = ScriptOptions.Default;
@@ -37,7 +38,7 @@ namespace DotForth
         ScriptState state = null;
         cscript = CSharpScript.Create(@"", scriptOptions, typeof(InputData), interactiveLoader);
         state = cscript.RunAsync(new InputData() { Forth = forth }).Result;
-        state = state.ContinueWithAsync(script).Result;
+        state = await state.ContinueWithAsync(script);
         //var output = state.ReturnValue;
       }
     }

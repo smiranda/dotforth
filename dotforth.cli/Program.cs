@@ -1,17 +1,19 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace DotForth
 {
   class Program
   {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
       var forth = new Forth();
       var line = "";
       Console.Write("$ ");
       while ((line = Console.ReadLine()) != null)
       {
-        forth.Run(line, Console.Out);
+        await forth.Run(line, Console.Out);
+        Console.Write("\n");
         Console.Write("$ ");
       }
     }
